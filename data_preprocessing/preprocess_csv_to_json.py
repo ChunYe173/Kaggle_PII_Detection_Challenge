@@ -4,11 +4,16 @@ import pandas as pd
 
  
 if __name__ == "__main__":
-    csv_file = r'C:\Users\abome\source\repos\venv_pii_ner\dataset\wnut17train_cleaned.csv' # append path to other dataset json files to this list
-    output_filename = "wnut17train_cleaned.json"
+    csv_file = input("Please input filename of csv to process (i.e. filename.csv): ")
+    print(csv_file)
+    output_filename = input("Please input filename of output json file (i.e. filename.json): ")
+    print(output_filename)
+
+    # csv_file = 'pii_dataset.csv'
+    # output_filename = "pii_dataset.json"
 
     df = pd.read_csv(csv_file)
-    df['labels'] = df['labels'].apply(lambda x: eval(x))
+    # df['labels'] = df['labels'].apply(lambda x: eval(x))
     print(df.head(3))
 
     new_json_string = df.to_json(orient='records')
