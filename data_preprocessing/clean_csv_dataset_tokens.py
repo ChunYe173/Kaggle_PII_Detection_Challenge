@@ -2,7 +2,8 @@ import os
 import json
 import pandas as pd
 
- 
+ ### Note that this code will only work at token level and not on the full_text - 2024 March 10
+
 if __name__ == "__main__":
     csv_file = input("Please input filename of csv to process (i.e. filename.csv): ") 
     print(csv_file)
@@ -26,17 +27,32 @@ if __name__ == "__main__":
       ''',
     '''   
      ''',
-     '​',' ','â€œ‹','Â­â€','­','™','Â','â','€','œ','‹']
+     '​—​','​',' ','​“','—','â€œ‹','Â­â€','­',
+     'Â©','™','Â','â','€','œ','‹','“','”','â€™','\u200b','’','‘','©',]
+     
+     # if tokens are as such, remove from training data
+    remove_token_from_list = ['']
 
     # Cleaning all tokens. Omitted from cleaning: full_text. Can edit code to clean full_text too. 
     # Loop through every single element in all token list
     for i in df.index:
         print("Processing row: ", i)
+        indexes_to_remove = []
         for j in range(len(df['tokens'].iloc[i])):
             for char in char_to_remove:
                 if char in df['tokens'].iloc[i][j]:
                     df['tokens'].iloc[i][j] = df['tokens'].iloc[i][j].replace(char,'')
-
+            # To mark out tokens for removal from the list
+            if df['tokens'].iloc[i][j] in remove_token_from_list:
+                indexes_to_remove.append(j)
+        indexes_to_remove.reverse()
+        # remove tokens from dataset
+        for index in indexes_to_remove:
+            df['tokens'].iloc[i].pop(index)
+            df['trailing_whitespace'].iloc[i].pop(index)
+            df['labels'].iloc[i].pop(index)
+        assert len(df['tokens'].iloc[i]) == len(df['labels'].iloc[i])
+        assert len(df['tokens'].iloc[i]) == len(df['trailing_whitespace'].iloc[i])
     df.to_csv(output_filename, index=False)
 
     print("Generated cleaned csv file.")
@@ -59,4 +75,21 @@ NAME
 Ruben Pabon,
 Georgia,
 Bethany,
+Xiaoxuan Yang,
+Fernando    O
+Castro  O
+,
+    O
+1960    O
+,   O
+pp  O
+.   O
+1–44    O
+.   O
+,
+Rice    O
+University  O
+’s  O
+Baker   O
+Institute   O
 """
