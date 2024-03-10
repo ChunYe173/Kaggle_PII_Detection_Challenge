@@ -27,8 +27,9 @@ if __name__ == "__main__":
       ''',
     '''   
      ''',
-     '​—​','​',' ','​“','—','â€œ‹','Â­â€','­',
-     'Â©','™','Â','â','€','œ','‹','“','”','â€™','\u200b','’','‘','©',]
+     '​—​','​',' ','​“','—','–','‐','â€œ‹','Â­â€',
+     '­','\u00c9','\u201c','\u201d','â€¢','\u2022','â€¦','â€ ','â€“','Ã‰','Â©','™','Â','â','€','œ',
+     '‹','“','”','â€™','\u200b','’','‘','©','…','�','ï¿½']
      
      # if tokens are as such, remove from training data
     remove_token_from_list = ['']
@@ -42,6 +43,8 @@ if __name__ == "__main__":
             for char in char_to_remove:
                 if char in df['tokens'].iloc[i][j]:
                     df['tokens'].iloc[i][j] = df['tokens'].iloc[i][j].replace(char,'')
+            if 'ï¬‚' in df['tokens'].iloc[i][j]: # 'ﬂ'
+                df['tokens'].iloc[i][j] = df['tokens'].iloc[i][j].replace('ï¬‚','fl')
             # To mark out tokens for removal from the list
             if df['tokens'].iloc[i][j] in remove_token_from_list:
                 indexes_to_remove.append(j)
@@ -58,7 +61,8 @@ if __name__ == "__main__":
     print("Generated cleaned csv file.")
 
 """
-#trash strings: ​,  , â€œ‹, \n\n, ' ', '    ', '   ', \n,­,™,Â­â€,Â­â€,
+#trash strings: ​,  , â€œ‹, \n\n, ' ', '    ', '   ', \n,­,™,Â­â€,
+Â­â€,\xa0,\u2022,
 
     
     
@@ -92,4 +96,6 @@ University  O
 ’s  O
 Baker   O
 Institute   O
+
+Trash strings that cannot be processed: â€¢, 
 """
